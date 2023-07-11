@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jp.dcworks.app.paiza_learn_track_web.mybatis.ProgressRatesMapper">
+
+	<resultMap id="ProgressRatesMap" type="jp.dcworks.app.paiza_learn_track_web.mybatis.entity.ProgressRatesMap">
+		<result property="teamUsersId" column="id" />
+		<result property="name" column="name" />
+		<result property="sumTotalLearningHours" column="sum_total_learning_hours" />
+	</resultMap>
+
+	<!-- progress_rates テーブルより team_users_id でグルーピングした学習時間（時）の合計を取得する。 -->
+	<select id="getSumTotalLearningHours" resultMap="ProgressRatesMap">
+		SELECT
+			tu.id
+			, tu.name
+			, sum(pr.total_learning_hours) as sum_total_learning_hours
+		FROM
+			progress_rates pr
+				LEFT JOIN team_users tu ON
+					tu.id = pr.team_users_id
+		WHERE
+			pr.report_date = #{report_date}
+		GROUP BY
+			pr.team_users_id
+		ORDER BY
+			pr.team_users_id
+		;
+	</select>
+</mapper>
