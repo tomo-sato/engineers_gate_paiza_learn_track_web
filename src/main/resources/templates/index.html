@@ -56,12 +56,12 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr th:each="progressRates:${progressRatesList}">
+									<tr th:each="progressRates:${progressRatesDtoList}">
 										<td scope="row"><a th:href="@{/detail/{id}(id=${progressRates.teamUsersId})}" th:text="${progressRates.teamUsersId}">1</a></td>
 										<td><a th:href="@{/detail/{id}(id=${progressRates.teamUsersId})}" th:text="${progressRates.name}">佐藤 裕子</a></td>
-										<td>Java入門編10:例外処理を理解しよう<br>【01: 例外処理の概要を理解しよう】</td>
-										<td th:text="${progressRates.sumTotalLearningHours}">100.00%</td>
-										<td>2016-05-25</td>
+										<td>[[${progressRates.lessonName}]]<br>【[[${progressRates.chapterName}]]】</td>
+										<td th:text="|${progressRates.sumTotalLearningHours}%|">100.00%</td>
+										<td th:text="${#dates.format(progressRates.chapterLastAccessDatetime, 'yyyy-MM-dd')}">2016-05-25</td>
 									</tr>
 								</tbody>
 							</table>

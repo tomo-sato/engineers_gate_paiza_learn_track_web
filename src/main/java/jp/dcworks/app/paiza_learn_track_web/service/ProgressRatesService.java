@@ -21,7 +21,7 @@ public class ProgressRatesService {
 	@Autowired
 	private ProgressRatesMapper progressRatesMapper;
 
-	public List<ProgressRatesMap> getSumTotalLearningHours(Date reportDate) {
-		return progressRatesMapper.getSumTotalLearningHours(reportDate);
+	public List<ProgressRatesMap> getSumTotalLearningHours(Date reportDate, Double sumLearningMinutes) {
+		return progressRatesMapper.getSumTotalLearningHours(reportDate, sumLearningMinutes);
 	}
 }

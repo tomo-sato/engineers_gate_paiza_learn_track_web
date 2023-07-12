@@ -13,7 +13,7 @@
 		SELECT
 			tu.id
 			, tu.name
-			, sum(pr.total_learning_hours) as sum_total_learning_hours
+			, ROUND((sum(pr.total_learning_hours) / #{sum_learning_minutes}) * 100, 2) as sum_total_learning_hours
 		FROM
 			progress_rates pr
 				LEFT JOIN team_users tu ON

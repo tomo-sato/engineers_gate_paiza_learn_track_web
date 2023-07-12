@@ -17,5 +17,5 @@ public class ProgressRatesMap {
 	private String name;
 
 	/** 学習時間合計（時） */
-	private Double sumTotalLearningHours;
+	private String sumTotalLearningHours;
 }
