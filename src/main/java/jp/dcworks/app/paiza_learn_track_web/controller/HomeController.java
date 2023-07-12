@@ -18,6 +18,7 @@ import jp.dcworks.app.paiza_learn_track_web.dto.ProgressRatesDto;
 import jp.dcworks.app.paiza_learn_track_web.mybatis.entity.ProgressRatesMap;
 import jp.dcworks.app.paiza_learn_track_web.mybatis.entity.TeamUserTaskProgressMap;
 import jp.dcworks.app.paiza_learn_track_web.service.ProgressRatesService;
+import jp.dcworks.app.paiza_learn_track_web.service.TasksService;
 import jp.dcworks.app.paiza_learn_track_web.service.TeamUserTaskProgressService;
 import lombok.extern.log4j.Log4j2;
 
@@ -31,6 +32,8 @@ import lombok.extern.log4j.Log4j2;
 @RequestMapping("/")
 public class HomeController {
 
+	@Autowired
+	TasksService tasksService;
 	@Autowired
 	ProgressRatesService progressRatesService;
 	@Autowired
@@ -48,7 +51,8 @@ public class HomeController {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Date reportDate = sdf.parse("2023-07-05");
 
-		List<ProgressRatesMap> progressRatesList = progressRatesService.getSumTotalLearningHours(reportDate, 75.80);
+		Double sumLearningHours = tasksService.findGroupBySumLearningHours();
+		List<ProgressRatesMap> progressRatesList = progressRatesService.getSumTotalLearningHours(reportDate, sumLearningHours);
 		Map<Long, TeamUserTaskProgressMap> lastAccessLessonMap = teamUserTaskProgressService.getLastAccessLessonMap();
 
 		List<ProgressRatesDto> progressRatesDtoList = convertProgressRatesDto(progressRatesList, lastAccessLessonMap);

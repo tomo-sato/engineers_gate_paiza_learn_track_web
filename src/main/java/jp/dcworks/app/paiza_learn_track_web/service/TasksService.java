@@ -16,4 +16,8 @@ public class TasksService {
 	/** Mapperインターフェース。 */
 	@Autowired
 	private TasksMapper tasksMapper;
+
+	public Double findGroupBySumLearningHours() {
+		return tasksMapper.findGroupBySumLearningHours();
+	}
 }
