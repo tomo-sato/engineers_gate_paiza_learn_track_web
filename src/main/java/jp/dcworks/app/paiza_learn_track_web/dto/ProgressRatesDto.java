@@ -5,7 +5,7 @@ import java.util.Date;
 import lombok.Data;
 
 /**
- * MyBatis課題進捗率Entityクラス。
+ * 講座別一覧画面DTOクラス。
  *
  * @author tomo-sato
  */

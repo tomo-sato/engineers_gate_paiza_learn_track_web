@@ -28,10 +28,24 @@ public class ProgressRatesService {
 	@Autowired
 	private ProgressRatesRepository progressRatesRepository;
 
+	/**
+	 * progress_rates テーブルより team_users_id でグルーピングした学習時間（時）の合計を取得する。
+	 *
+	 * @param reportDate 集計日
+	 * @param sumLearningMinutes 学習時間合計
+	 * @return
+	 */
 	public List<ProgressRatesMap> getSumTotalLearningHours(Date reportDate, Double sumLearningMinutes) {
 		return progressRatesMapper.getSumTotalLearningHours(reportDate, sumLearningMinutes);
 	}
 
+	/**
+	 * ユーザーID、集計日で検索した結果を取得する。
+	 *
+	 * @param teamUsersId
+	 * @param reportDate
+	 * @return Map<String{レッスンID}, ProgressRates>
+	 */
 	public Map<String, ProgressRates> findByTeamUsersIdAndReportDateOrderMap(Long teamUsersId, Date reportDate) {
 		List<ProgressRates> list = progressRatesRepository.findByTeamUsersIdAndReportDate(teamUsersId, reportDate);
 

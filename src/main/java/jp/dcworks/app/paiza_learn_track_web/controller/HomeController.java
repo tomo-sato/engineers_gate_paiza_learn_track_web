@@ -35,10 +35,13 @@ import lombok.extern.log4j.Log4j2;
 @RequestMapping("/")
 public class HomeController {
 
+	/** 課題サービス */
 	@Autowired
 	TasksService tasksService;
+	/** 課題進捗率サービス */
 	@Autowired
 	ProgressRatesService progressRatesService;
+	/** チームユーザー課題進捗サービス */
 	@Autowired
 	TeamUserTaskProgressService teamUserTaskProgressService;
 
@@ -85,6 +88,13 @@ public class HomeController {
 		return "detail";
 	}
 
+	/**
+	 * DTOコンバータ
+	 *
+	 * @param tasksMapList
+	 * @param progressRatesMap
+	 * @return
+	 */
 	private List<UserProgressRatesDto> convertUserProgressRatesDto(List<TasksMap> tasksMapList,
 			Map<String, ProgressRates> progressRatesMap) {
 
@@ -113,6 +123,13 @@ public class HomeController {
 		return retList;
 	}
 
+	/**
+	 * DTOコンバータ
+	 *
+	 * @param progressRatesList
+	 * @param lastAccessLessonMap
+	 * @return
+	 */
 	private List<ProgressRatesDto> convertProgressRatesDto(List<ProgressRatesMap> progressRatesList,
 			Map<Long, TeamUserTaskProgressMap> lastAccessLessonMap) {
 

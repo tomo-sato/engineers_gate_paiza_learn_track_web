@@ -11,7 +11,7 @@ import jp.dcworks.app.paiza_learn_track_web.mybatis.TeamUserTaskProgressMapper;
 import jp.dcworks.app.paiza_learn_track_web.mybatis.entity.TeamUserTaskProgressMap;
 
 /**
- * 課題サービスクラス。
+ * チームユーザー課題進捗サービスクラス。
  *
  * @author tomo-sato
  */
@@ -22,10 +22,20 @@ public class TeamUserTaskProgressService {
 	@Autowired
 	private TeamUserTaskProgressMapper teamUserTaskProgressMapper;
 
+	/**
+	 * team_user_task_progress テーブルより受講生の最終着手課題を取得する。
+	 *
+	 * @return
+	 */
 	public List<TeamUserTaskProgressMap> getLastAccessLesson() {
 		return teamUserTaskProgressMapper.getLastAccessLesson();
 	}
 
+	/**
+	 * team_user_task_progress テーブルより受講生の最終着手課題を取得する。
+	 *
+	 * @return Map<Long{チームユーザーID}, TeamUserTaskProgressMap>
+	 */
 	public Map<Long, TeamUserTaskProgressMap> getLastAccessLessonMap() {
 		List<TeamUserTaskProgressMap> list = teamUserTaskProgressMapper.getLastAccessLesson();
 

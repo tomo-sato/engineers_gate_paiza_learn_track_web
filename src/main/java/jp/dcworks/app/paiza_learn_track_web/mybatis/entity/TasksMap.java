@@ -3,7 +3,7 @@ package jp.dcworks.app.paiza_learn_track_web.mybatis.entity;
 import lombok.Data;
 
 /**
- * MyBatis課題進捗率Entityクラス。
+ * MyBatis課題Entityクラス。
  *
  * @author tomo-sato
  */

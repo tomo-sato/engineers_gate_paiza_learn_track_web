@@ -5,7 +5,7 @@ import java.util.Date;
 import lombok.Data;
 
 /**
- * MyBatis課題進捗率Entityクラス。
+ * 講座別進捗一覧画面DTOクラス。
  *
  * @author tomo-sato
  */
@@ -37,6 +37,11 @@ public class UserProgressRatesDto {
 	/** レッスン最終受講日時 */
 	private Date lessonLastAccessDatetime;
 
+	/**
+	 * 進捗率の計算結果を取得する。
+	 *
+	 * @return
+	 */
 	public Double getLearningRate() {
 		if (this.sumAchievedLearningHours == null) {
 			return 0.0;

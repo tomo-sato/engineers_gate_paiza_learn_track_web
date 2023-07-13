@@ -20,10 +20,20 @@ public class TasksService {
 	@Autowired
 	private TasksMapper tasksMapper;
 
+	/**
+	 * tasks テーブルより task_types_id:1.paiza でグルーピングした学習時間（時）の合計を取得する。
+	 *
+	 * @return
+	 */
 	public Double findGroupBySumLearningHours() {
 		return tasksMapper.findGroupBySumLearningHours();
 	}
 
+	/**
+	 * tasks テーブルより レッスンでグルーピングした結果を取得する。
+	 *
+	 * @return
+	 */
 	public List<TasksMap> findGroupByLesson() {
 		return tasksMapper.findGroupByLesson();
 	}

@@ -15,5 +15,12 @@ import jp.dcworks.app.paiza_learn_track_web.entity.ProgressRates;
  */
 public interface ProgressRatesRepository extends PagingAndSortingRepository<ProgressRates, Long>, CrudRepository<ProgressRates, Long> {
 
+	/**
+	 * ユーザーID、集計日で検索した結果を取得する。
+	 *
+	 * @param teamUsersId
+	 * @param reportDate
+	 * @return
+	 */
 	List<ProgressRates> findByTeamUsersIdAndReportDate(Long teamUsersId, Date reportDate);
 }

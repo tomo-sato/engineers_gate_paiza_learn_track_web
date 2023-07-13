@@ -16,5 +16,10 @@ public interface TasksMapper {
 	 */
 	Double findGroupBySumLearningHours();
 
+	/**
+	 * tasks テーブルより レッスンでグルーピングした結果を取得する。
+	 *
+	 * @return
+	 */
 	List<TasksMap> findGroupByLesson();
 }
