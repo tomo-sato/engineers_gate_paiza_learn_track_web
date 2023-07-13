@@ -1,13 +1,17 @@
 package jp.dcworks.app.paiza_learn_track_web.service;
 
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jp.dcworks.app.paiza_learn_track_web.entity.ProgressRates;
 import jp.dcworks.app.paiza_learn_track_web.mybatis.ProgressRatesMapper;
 import jp.dcworks.app.paiza_learn_track_web.mybatis.entity.ProgressRatesMap;
+import jp.dcworks.app.paiza_learn_track_web.repository.ProgressRatesRepository;
 
 /**
  * 課題進捗率サービスクラス。
@@ -20,8 +24,23 @@ public class ProgressRatesService {
 	/** Mapperインターフェース。 */
 	@Autowired
 	private ProgressRatesMapper progressRatesMapper;
+	/** リポジトリインターフェース。 */
+	@Autowired
+	private ProgressRatesRepository progressRatesRepository;
 
 	public List<ProgressRatesMap> getSumTotalLearningHours(Date reportDate, Double sumLearningMinutes) {
 		return progressRatesMapper.getSumTotalLearningHours(reportDate, sumLearningMinutes);
+	}
+
+	public Map<String, ProgressRates> findByTeamUsersIdAndReportDateOrderMap(Long teamUsersId, Date reportDate) {
+		List<ProgressRates> list = progressRatesRepository.findByTeamUsersIdAndReportDate(teamUsersId, reportDate);
+
+		Map<String, ProgressRates> retMap = new LinkedHashMap<String, ProgressRates>();
+		for (ProgressRates item : list) {
+			String lessonId = item.getLessonId();
+			retMap.put(lessonId, item);
+		}
+
+		return retMap;
 	}
 }

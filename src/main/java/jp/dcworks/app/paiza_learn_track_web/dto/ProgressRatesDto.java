@@ -19,7 +19,7 @@ public class ProgressRatesDto {
 	private String name;
 
 	/** 学習時間合計（時） */
-	private String sumTotalLearningHours;
+	private Double sumTotalLearningHours;
 
 	/** 講座名 */
 	private String courseName;

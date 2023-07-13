@@ -1,6 +1,10 @@
 package jp.dcworks.app.paiza_learn_track_web.mybatis;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
+
+import jp.dcworks.app.paiza_learn_track_web.mybatis.entity.TasksMap;
 
 @Mapper
 public interface TasksMapper {
@@ -11,4 +15,6 @@ public interface TasksMapper {
 	 * @return
 	 */
 	Double findGroupBySumLearningHours();
+
+	List<TasksMap> findGroupByLesson();
 }

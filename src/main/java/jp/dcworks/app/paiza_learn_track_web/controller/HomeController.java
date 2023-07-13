@@ -15,7 +15,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jp.dcworks.app.paiza_learn_track_web.dto.ProgressRatesDto;
+import jp.dcworks.app.paiza_learn_track_web.dto.UserProgressRatesDto;
+import jp.dcworks.app.paiza_learn_track_web.entity.ProgressRates;
 import jp.dcworks.app.paiza_learn_track_web.mybatis.entity.ProgressRatesMap;
+import jp.dcworks.app.paiza_learn_track_web.mybatis.entity.TasksMap;
 import jp.dcworks.app.paiza_learn_track_web.mybatis.entity.TeamUserTaskProgressMap;
 import jp.dcworks.app.paiza_learn_track_web.service.ProgressRatesService;
 import jp.dcworks.app.paiza_learn_track_web.service.TasksService;
@@ -65,10 +68,49 @@ public class HomeController {
 	 * [GET]講座別進捗一覧画面のアクション。
 	 *
 	 * @param model 画面にデータを送るためのオブジェクト
+	 * @throws ParseException
 	 */
-	@GetMapping("/detail/{id}")
-	public String detail(@PathVariable Long id, Model model) {
+	@GetMapping("/detail/{teamUsersId}")
+	public String detail(@PathVariable Long teamUsersId, Model model) throws ParseException {
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date reportDate = sdf.parse("2023-07-05");
+
+		List<TasksMap> tasksMapList = tasksService.findGroupByLesson();
+		Map<String, ProgressRates> progressRatesMap = progressRatesService.findByTeamUsersIdAndReportDateOrderMap(teamUsersId, reportDate);
+
+		List<UserProgressRatesDto> userProgressRatesDtoList = convertUserProgressRatesDto(tasksMapList, progressRatesMap);
+
+		model.addAttribute("userProgressRatesDtoList", userProgressRatesDtoList);
 		return "detail";
+	}
+
+	private List<UserProgressRatesDto> convertUserProgressRatesDto(List<TasksMap> tasksMapList,
+			Map<String, ProgressRates> progressRatesMap) {
+
+		List<UserProgressRatesDto> retList = new ArrayList<UserProgressRatesDto>();
+
+		for (TasksMap item : tasksMapList) {
+			String lessonId = item.getLessonId();
+
+			UserProgressRatesDto userProgressRatesDto = new UserProgressRatesDto();
+			userProgressRatesDto.setMaxTasksId(item.getMaxTasksId());
+			userProgressRatesDto.setCourseId(item.getCourseId());
+			userProgressRatesDto.setCourseName(item.getCourseName());
+			userProgressRatesDto.setLessonName(item.getLessonName());
+			userProgressRatesDto.setSumTotalLearningHours(item.getSumLearningMinutes());
+
+			if (progressRatesMap.containsKey(lessonId)) {
+				ProgressRates progressRates = progressRatesMap.get(lessonId);
+
+				userProgressRatesDto.setSumAchievedLearningHours(progressRates.getAchievedLearningHours());
+				userProgressRatesDto.setLearningRate(progressRates.getTaskProgressRate());
+			}
+
+			retList.add(userProgressRatesDto);
+		}
+
+		return retList;
 	}
 
 	private List<ProgressRatesDto> convertProgressRatesDto(List<ProgressRatesMap> progressRatesList,

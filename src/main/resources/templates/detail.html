@@ -48,7 +48,7 @@
 							<table class="table table-striped">
 								<thead>
 									<tr>
-										<th scope="col">No.</th>
+										<th scope="col">講座ID.</th>
 										<th scope="col">講座名</th>
 										<th scope="col">レッスン名</th>
 										<th scope="col">学習時間合計（時）</th>
@@ -58,50 +58,14 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr>
-										<th scope="row">1</th>
-										<td>Java入門編</a></td>
-										<td>Java入門編1:プログラミングを学ぶ</td>
-										<td>6.65</td>
-										<td>6.65</td>
-										<td>100.00%</td>
-										<td>2016-05-25</td>
-									</tr>
-									<tr>
-										<th scope="row">2</th>
-										<td>Java入門編</a></td>
-										<td>Java入門編2:条件によって処理を変えてみよう</td>
-										<td>5.10</td>
-										<td>5.10</td>
-										<td>100.00%</td>
-										<td>2014-12-05</td>
-									</tr>
-									<tr>
-										<th scope="row">3</th>
-										<td>Java入門編</a></td>
-										<td>Java入門編3: ループ処理を学ぶ</td>
-										<td>5.15</td>
-										<td>5.15</td>
-										<td>100.00%</td>
-										<td>2011-08-12</td>
-									</tr>
-									<tr>
-										<th scope="row">4</th>
-										<td>Java入門編</a></td>
-										<td>Java入門編4:配列の基礎</td>
-										<td>5.90</td>
-										<td>5.90</td>
-										<td>100.00%</td>
-										<td>2012-06-11</td>
-									</tr>
-									<tr>
-										<th scope="row">5</th>
-										<td>Java入門編</a></td>
-										<td>Java入門編5: 2次元配列を理解しよう</td>
-										<td>4.95</td>
-										<td>3.20</td>
-										<td>64.65%</td>
-										<td>2011-04-19</td>
+									<tr th:each="userProgressRates:${userProgressRatesDtoList}">
+										<td scope="row" th:text="${userProgressRates.maxTasksId}">1</td>
+										<td th:text="${userProgressRates.courseName}">Java入門編</a></td>
+										<td th:text="${userProgressRates.lessonName}">Java入門編1:プログラミングを学ぶ</td>
+										<td th:text="${userProgressRates.sumTotalLearningHours}">6.65</td>
+										<td th:text="${userProgressRates.sumAchievedLearningHours}">6.65</td>
+										<td th:text="|${userProgressRates.learningRate}%|">100.00%</td>
+										<td th:text="${#dates.format(userProgressRates.lessonLastAccessDatetime, 'yyyy-MM-dd')}">2016-05-25</td>
 									</tr>
 								</tbody>
 							</table>

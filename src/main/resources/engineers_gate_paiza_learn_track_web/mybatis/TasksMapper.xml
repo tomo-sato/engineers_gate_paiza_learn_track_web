@@ -14,4 +14,38 @@
 			task_types_id
 		;
 	</select>
+
+
+	<resultMap id="TasksMap" type="jp.dcworks.app.paiza_learn_track_web.mybatis.entity.TasksMap">
+		<result property="maxTasksId" column="max_tasks_id" />
+		<result property="courseId" column="course_id" />
+		<result property="courseName" column="course_name" />
+		<result property="lessonId" column="lesson_id" />
+		<result property="lessonName" column="lesson_name" />
+		<result property="sumLearningMinutes" column="sum_learning_minutes" />
+	</resultMap>
+
+	<!-- tasks テーブルより レッスンでグルーピングした結果を取得する。 -->
+	<select id="findGroupByLesson" resultMap="TasksMap">
+		SELECT
+			max(id) as max_tasks_id
+			, course_id
+			, course_name
+			, lesson_id
+			, lesson_name
+			, ROUND((sum(learning_minutes) / 60), 2) as sum_learning_minutes
+		FROM
+			tasks
+		WHERE
+			task_types_id = 1
+		GROUP BY
+			course_id
+			, course_name
+			, lesson_id
+			, lesson_name
+		ORDER BY
+			max_tasks_id
+		;
+	</select>
+
 </mapper>
