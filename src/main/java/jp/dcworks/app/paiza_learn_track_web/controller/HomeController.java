@@ -55,7 +55,7 @@ public class HomeController {
 	public String index(Model model) throws ParseException {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Date reportDate = sdf.parse("2023-07-05");
+		Date reportDate = sdf.parse("2023-07-14");
 
 		Double sumLearningHours = tasksService.findGroupBySumLearningHours();
 		List<ProgressRatesMap> progressRatesList = progressRatesService.getSumTotalLearningHours(reportDate, sumLearningHours);
@@ -77,8 +77,9 @@ public class HomeController {
 	public String detail(@PathVariable Long teamUsersId, Model model) throws ParseException {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Date reportDate = sdf.parse("2023-07-05");
+		Date reportDate = sdf.parse("2023-07-14");
 
+		// tasks テーブルより レッスンでグルーピングした結果を表出するリストのベースとする。（ここで取得した結果が全課題。）
 		List<TasksMap> tasksMapList = tasksService.findGroupByLesson();
 		Map<String, ProgressRates> progressRatesMap = progressRatesService.findByTeamUsersIdAndReportDateOrderMap(teamUsersId, reportDate);
 
@@ -114,7 +115,8 @@ public class HomeController {
 				ProgressRates progressRates = progressRatesMap.get(lessonId);
 
 				userProgressRatesDto.setSumAchievedLearningHours(progressRates.getAchievedLearningHours());
-				userProgressRatesDto.setLearningRate(progressRates.getTaskProgressRate());
+				userProgressRatesDto.setTaskProgressRate(progressRates.getTaskProgressRate());
+				userProgressRatesDto.setChapterLastAccessDatetime(progressRates.getChapterLastAccessDatetime());
 			}
 
 			retList.add(userProgressRatesDto);

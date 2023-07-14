@@ -42,7 +42,7 @@
 
 					<div class="card">
 						<div class="card-body">
-							<h5 class="card-title">講座別進捗一覧（	山田 隆夫）</h5>
+							<h5 class="card-title">講座別進捗一覧（	山田 太郎）</h5>
 
 							<!-- Table with stripped rows -->
 							<table class="table table-striped">
@@ -64,8 +64,8 @@
 										<td th:text="${userProgressRates.lessonName}">Java入門編1:プログラミングを学ぶ</td>
 										<td th:text="${userProgressRates.sumTotalLearningHours}">6.65</td>
 										<td th:text="${userProgressRates.sumAchievedLearningHours}">6.65</td>
-										<td th:text="|${userProgressRates.learningRate}%|">100.00%</td>
-										<td th:text="${#dates.format(userProgressRates.lessonLastAccessDatetime, 'yyyy-MM-dd')}">2016-05-25</td>
+										<td th:text="${userProgressRates.taskProgressRate != null ? userProgressRates.taskProgressRate + '%' : ''}">100.00%</td>
+										<td th:text="${#dates.format(userProgressRates.chapterLastAccessDatetime, 'yyyy-MM-dd')}">2016-05-25</td>
 									</tr>
 								</tbody>
 							</table>

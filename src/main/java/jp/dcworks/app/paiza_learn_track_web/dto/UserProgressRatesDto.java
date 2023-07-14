@@ -31,21 +31,8 @@ public class UserProgressRatesDto {
 	private Double sumAchievedLearningHours;
 
 	/** 進捗率 */
-	@SuppressWarnings("unused")
-	private Double learningRate;
+	private Double taskProgressRate;
 
-	/** レッスン最終受講日時 */
-	private Date lessonLastAccessDatetime;
-
-	/**
-	 * 進捗率の計算結果を取得する。
-	 *
-	 * @return
-	 */
-	public Double getLearningRate() {
-		if (this.sumAchievedLearningHours == null) {
-			return 0.0;
-		}
-		return (this.sumAchievedLearningHours / this.sumTotalLearningHours) * 100;
-	}
+	/** チャプター最終受講日時 */
+	private Date chapterLastAccessDatetime;
 }

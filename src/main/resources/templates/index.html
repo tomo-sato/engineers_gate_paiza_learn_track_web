@@ -50,6 +50,7 @@
 									<tr>
 										<th scope="col">No.</th>
 										<th scope="col">名前</th>
+										<th scope="col">最終学習講座名</th>
 										<th scope="col">進捗</th>
 										<th scope="col">進捗率</th>
 										<th scope="col">最終受講日</th>
@@ -59,6 +60,7 @@
 									<tr th:each="progressRates:${progressRatesDtoList}">
 										<td scope="row"><a th:href="@{/detail/{id}(id=${progressRates.teamUsersId})}" th:text="${progressRates.teamUsersId}">1</a></td>
 										<td><a th:href="@{/detail/{id}(id=${progressRates.teamUsersId})}" th:text="${progressRates.name}">佐藤 裕子</a></td>
+										<td th:text="${progressRates.courseName}">HTML/CSS入門編</td>
 										<td>[[${progressRates.lessonName}]]<br>【[[${progressRates.chapterName}]]】</td>
 										<td th:text="|${progressRates.sumTotalLearningHours}%|">100.00%</td>
 										<td th:text="${#dates.format(progressRates.chapterLastAccessDatetime, 'yyyy-MM-dd')}">2016-05-25</td>
