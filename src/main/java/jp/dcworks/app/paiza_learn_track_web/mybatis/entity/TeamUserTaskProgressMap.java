@@ -32,4 +32,7 @@ public class TeamUserTaskProgressMap {
 
 	/** チャプター最終受講日時 */
 	private Date chapterLastAccessDatetime;
+
+	/** 集計日（yyyy-MM-dd） */
+	private Date reportDate;
 }

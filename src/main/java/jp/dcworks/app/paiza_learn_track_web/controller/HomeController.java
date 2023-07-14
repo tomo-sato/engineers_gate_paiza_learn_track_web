@@ -59,7 +59,7 @@ public class HomeController {
 
 		Double sumLearningHours = tasksService.findGroupBySumLearningHours();
 		List<ProgressRatesMap> progressRatesList = progressRatesService.getSumTotalLearningHours(reportDate, sumLearningHours);
-		Map<Long, TeamUserTaskProgressMap> lastAccessLessonMap = teamUserTaskProgressService.getLastAccessLessonMap();
+		Map<Long, TeamUserTaskProgressMap> lastAccessLessonMap = teamUserTaskProgressService.getLastAccessLessonMap(reportDate);
 
 		List<ProgressRatesDto> progressRatesDtoList = convertProgressRatesDto(progressRatesList, lastAccessLessonMap);
 
