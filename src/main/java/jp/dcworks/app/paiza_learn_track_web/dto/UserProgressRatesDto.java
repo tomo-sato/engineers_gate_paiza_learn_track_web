@@ -15,6 +15,9 @@ public class UserProgressRatesDto {
 	/** 課題ID */
 	private Long maxTasksId;
 
+	/** 課題種別ID（※1.paiza、2.オリジナル課題） */
+	private Integer taskTypesId;
+
 	/** 講座ID */
 	private Integer courseId;
 

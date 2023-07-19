@@ -2,6 +2,7 @@ package jp.dcworks.app.paiza_learn_track_web.repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -23,4 +24,15 @@ public interface ProgressRatesRepository extends PagingAndSortingRepository<Prog
 	 * @return
 	 */
 	List<ProgressRates> findByTeamUsersIdAndReportDate(Long teamUsersId, Date reportDate);
+
+	/**
+	 * UKで検索をする。
+	 *
+	 * @param teamUsersId
+	 * @param courseId
+	 * @param lessonId
+	 * @param reportDate
+	 * @return
+	 */
+	Optional<ProgressRates> findByTeamUsersIdAndCourseIdAndLessonIdAndReportDate(Long teamUsersId, Integer courseId, String lessonId, Date reportDate);
 }

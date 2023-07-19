@@ -8,7 +8,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jp.dcworks.app.paiza_learn_track_web.entity.OriginalTaskProgress;
 import jp.dcworks.app.paiza_learn_track_web.entity.ProgressRates;
+import jp.dcworks.app.paiza_learn_track_web.entity.Tasks;
 import jp.dcworks.app.paiza_learn_track_web.mybatis.ProgressRatesMapper;
 import jp.dcworks.app.paiza_learn_track_web.mybatis.entity.ProgressRatesMap;
 import jp.dcworks.app.paiza_learn_track_web.repository.ProgressRatesRepository;
@@ -56,5 +58,34 @@ public class ProgressRatesService {
 		}
 
 		return retMap;
+	}
+
+	public void save(Tasks tasks, OriginalTaskProgress originalTaskProgress, Date reportDate) {
+		Double totalLearningHours = (double) (tasks.getLearningMinutes() / 60);
+		Double taskProgressRate = originalTaskProgress.getTaskProgressRate();
+		Double achievedLearningHours = totalLearningHours * (taskProgressRate / 100);
+		Long teamUsersId = originalTaskProgress.getTeamUsersId();
+		Integer courseId = tasks.getCourseId();
+		String lessonId = tasks.getLessonId();
+
+		// UKで検索をかける。
+		ProgressRates progressRates = progressRatesRepository.findByTeamUsersIdAndCourseIdAndLessonIdAndReportDate(teamUsersId, courseId, lessonId, reportDate).orElse(null);
+
+		if (progressRates == null) {
+			progressRates = new ProgressRates();
+			progressRates.setTeamUsersId(teamUsersId);
+			progressRates.setCourseId(courseId);
+			progressRates.setCourseName(tasks.getCourseName());
+			progressRates.setLessonId(lessonId);
+			progressRates.setLessonName(tasks.getLessonName());
+			progressRates.setReportDate(reportDate);
+		}
+		progressRates.setAchievedLearningHours(achievedLearningHours);
+		progressRates.setTotalLearningHours(totalLearningHours);
+		progressRates.setTaskProgressRate(taskProgressRate);
+		progressRates.setChapterLastAccessDatetime(reportDate);
+		progressRates.setOriginalTaskProgressId(null);
+
+		progressRatesRepository.save(progressRates);
 	}
 }

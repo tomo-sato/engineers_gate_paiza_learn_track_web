@@ -7,19 +7,29 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jp.dcworks.app.paiza_learn_track_web.dto.ProgressRatesDto;
+import jp.dcworks.app.paiza_learn_track_web.dto.RequestTaskProgressRate;
 import jp.dcworks.app.paiza_learn_track_web.dto.UserProgressRatesDto;
+import jp.dcworks.app.paiza_learn_track_web.entity.OriginalTaskProgress;
 import jp.dcworks.app.paiza_learn_track_web.entity.ProgressRates;
+import jp.dcworks.app.paiza_learn_track_web.entity.Tasks;
 import jp.dcworks.app.paiza_learn_track_web.mybatis.entity.ProgressRatesMap;
 import jp.dcworks.app.paiza_learn_track_web.mybatis.entity.TasksMap;
 import jp.dcworks.app.paiza_learn_track_web.mybatis.entity.TeamUserTaskProgressMap;
+import jp.dcworks.app.paiza_learn_track_web.service.OriginalTaskProgressService;
 import jp.dcworks.app.paiza_learn_track_web.service.ProgressRatesService;
 import jp.dcworks.app.paiza_learn_track_web.service.TasksService;
 import jp.dcworks.app.paiza_learn_track_web.service.TeamUserTaskProgressService;
@@ -35,6 +45,8 @@ import lombok.extern.log4j.Log4j2;
 @RequestMapping("/")
 public class HomeController {
 
+	private static final String REPORT_DATE_STR = "2023-07-19";
+
 	/** 課題サービス */
 	@Autowired
 	TasksService tasksService;
@@ -44,6 +56,9 @@ public class HomeController {
 	/** チームユーザー課題進捗サービス */
 	@Autowired
 	TeamUserTaskProgressService teamUserTaskProgressService;
+	/** オリジナル課題進捗管理サービス */
+	@Autowired
+	OriginalTaskProgressService originalTaskProgressService;
 
 	/**
 	 * [GET]講座別一覧画面のアクション。
@@ -55,7 +70,7 @@ public class HomeController {
 	public String index(Model model) throws ParseException {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Date reportDate = sdf.parse("2023-07-14");
+		Date reportDate = sdf.parse(REPORT_DATE_STR);
 
 		Double sumLearningHours = tasksService.findGroupBySumLearningHours();
 		List<ProgressRatesMap> progressRatesList = progressRatesService.getSumTotalLearningHours(reportDate, sumLearningHours);
@@ -77,7 +92,7 @@ public class HomeController {
 	public String detail(@PathVariable Long teamUsersId, Model model) throws ParseException {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Date reportDate = sdf.parse("2023-07-14");
+		Date reportDate = sdf.parse(REPORT_DATE_STR);
 
 		// tasks テーブルより レッスンでグルーピングした結果を表出するリストのベースとする。（ここで取得した結果が全課題。）
 		List<TasksMap> tasksMapList = tasksService.findGroupByLesson();
@@ -86,7 +101,59 @@ public class HomeController {
 		List<UserProgressRatesDto> userProgressRatesDtoList = convertUserProgressRatesDto(tasksMapList, progressRatesMap);
 
 		model.addAttribute("userProgressRatesDtoList", userProgressRatesDtoList);
+		model.addAttribute("teamUsersId", teamUsersId);
+
+		if (!model.containsAttribute("requestTaskProgressRate")) {
+			model.addAttribute("requestTaskProgressRate", new RequestTaskProgressRate());
+		}
 		return "detail";
+	}
+
+	@PostMapping("/registRate/{teamUsersId}/{maxTasksId}")
+	public String registRate(@Validated @ModelAttribute RequestTaskProgressRate requestTaskProgressRate,
+			@PathVariable Long teamUsersId,
+			@PathVariable Long maxTasksId,
+			BindingResult result,
+			RedirectAttributes redirectAttributes) throws ParseException {
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date reportDate = sdf.parse(REPORT_DATE_STR);
+
+		log.info("進捗率登録処理のアクションが呼ばれました。：requestTaskProgressRate={}", requestTaskProgressRate);
+
+		// バリデーション。
+		if (result.hasErrors()) {
+			log.warn("バリデーションエラーが発生しました。：requestTaskProgressRate={}, result={}", requestTaskProgressRate, result);
+
+			redirectAttributes.addFlashAttribute("validationErrors", result);
+			redirectAttributes.addFlashAttribute("requestTaskProgressRate", requestTaskProgressRate);
+
+			// 入力画面へリダイレクト。
+			return "redirect:/detail/" + teamUsersId;
+		}
+
+		// 課題IDから、課題を抽出しチャプターIDを取得する。
+		Tasks tasks = tasksService.findById(maxTasksId);
+		log.info("課題データ取得。：tasks={}", tasks);
+
+		if (tasks == null) {
+			log.warn("課題データが取得できませんでした。：maxTasksId={}", maxTasksId);
+
+			// 入力画面へリダイレクト。
+			return "redirect:/detail/" + teamUsersId;
+		}
+		Integer chapterId = tasks.getChapterId();
+		String strTaskProgressRate = requestTaskProgressRate.getTaskProgressRate();
+		Double taskProgressRate = NumberUtils.toDouble(strTaskProgressRate);
+
+		// オリジナル課題進捗管理テーブルにデータを登録する。
+		OriginalTaskProgress originalTaskProgress = originalTaskProgressService.save(teamUsersId, chapterId, taskProgressRate, reportDate);
+		log.info("オリジナル課題進捗管理を登録しました。：originalTaskProgress={}", originalTaskProgress);
+
+		// 課題進捗率テーブルにデータを登録する。
+		progressRatesService.save(tasks, originalTaskProgress, reportDate);
+
+		return "redirect:/detail/" + teamUsersId;
 	}
 
 	/**
@@ -106,6 +173,7 @@ public class HomeController {
 
 			UserProgressRatesDto userProgressRatesDto = new UserProgressRatesDto();
 			userProgressRatesDto.setMaxTasksId(item.getMaxTasksId());
+			userProgressRatesDto.setTaskTypesId(item.getTaskTypesId());
 			userProgressRatesDto.setCourseId(item.getCourseId());
 			userProgressRatesDto.setCourseName(item.getCourseName());
 			userProgressRatesDto.setLessonName(item.getLessonName());

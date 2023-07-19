@@ -25,6 +25,9 @@ public class TasksMap {
 	/** レッスン名 */
 	private String lessonName;
 
+	/** 課題種別ID（※1.paiza、2.オリジナル課題） */
+	private Integer taskTypesId;
+
 	/** 学習時間合計（時） */
 	private Double sumLearningMinutes;
 }
