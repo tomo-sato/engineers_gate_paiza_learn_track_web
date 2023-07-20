@@ -31,6 +31,8 @@
 										<th scope="col">名前</th>
 										<th scope="col">最終学習講座名</th>
 										<th scope="col">進捗</th>
+										<th scope="col">学習開始日（経過日数）</th>
+										<th scope="col">終了予測（学習終了予測日数）</th>
 										<th scope="col">進捗率</th>
 										<th scope="col">最終受講日</th>
 									</tr>
@@ -41,6 +43,8 @@
 										<td><a th:href="@{/detail/{id}(id=${progressRates.teamUsersId})}" th:text="${progressRates.name}">佐藤 裕子</a></td>
 										<td th:text="${progressRates.courseName}">HTML/CSS入門編</td>
 										<td>[[${progressRates.lessonName}]]<br>【[[${progressRates.chapterName}]]】</td>
+										<td th:text="|${#dates.format(progressRates.learningStartDate, 'yyyy-MM-dd')}（${progressRates.elapsedDays} 日）|">2023-07-05（10日）</td>
+										<td th:text="|${#dates.format(progressRates.predictedEndDate, 'yyyy-MM-dd')}（+${progressRates.predictedEndDuration} 日）|">2023-07-05（10日）</td>
 										<td><b th:text="|${progressRates.sumTotalLearningHours}%|">100.00%</b></td>
 										<td th:text="${#dates.format(progressRates.chapterLastAccessDatetime, 'yyyy-MM-dd')}">2016-05-25</td>
 									</tr>

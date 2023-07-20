@@ -208,10 +208,25 @@ public class HomeController {
 		for (ProgressRatesMap item : progressRatesList) {
 			Long teamUsersId = item.getTeamUsersId();
 
+			Double sumTotalLearningHours = item.getSumTotalLearningHours();
+			Integer elapsedDays = item.getElapsedDays();
+			Integer predictedEndDuration = (int) (elapsedDays / (sumTotalLearningHours / 100)) - elapsedDays;
+
 			ProgressRatesDto progressRatesDto = new ProgressRatesDto();
 			progressRatesDto.setTeamUsersId(teamUsersId);
 			progressRatesDto.setName(item.getName());
-			progressRatesDto.setSumTotalLearningHours(item.getSumTotalLearningHours());
+			progressRatesDto.setSumTotalLearningHours(sumTotalLearningHours);
+			progressRatesDto.setLearningStartDate(item.getLearningStartDate());
+			progressRatesDto.setElapsedDays(elapsedDays);
+
+			// 学習狩猟予測日数
+			progressRatesDto.setPredictedEndDuration(predictedEndDuration);
+
+			// 学習終了予測日
+			Date currentDate = new Date();
+			long millisecondsToAdd = predictedEndDuration * 24 * 60 * 60 * 1000L;
+			Date predictedEndDate = new Date(currentDate.getTime() + millisecondsToAdd);
+			progressRatesDto.setPredictedEndDate(predictedEndDate);
 
 			if (lastAccessLessonMap.containsKey(teamUsersId)) {
 				TeamUserTaskProgressMap teamUserTaskProgressMap = lastAccessLessonMap.get(teamUsersId);

@@ -32,4 +32,16 @@ public class ProgressRatesDto {
 
 	/** チャプター最終受講日時 */
 	private Date chapterLastAccessDatetime;
+
+	/** 学習開始日 */
+	private Date learningStartDate;
+
+	/** 経過日数 */
+	private Integer elapsedDays;
+
+	/** 学習終了予測日 */
+	private Date predictedEndDate;
+
+	/** 学習終了予測日数 */
+	private Integer predictedEndDuration;
 }

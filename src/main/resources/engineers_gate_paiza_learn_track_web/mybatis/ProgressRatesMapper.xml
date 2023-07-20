@@ -5,6 +5,8 @@
 	<resultMap id="ProgressRatesMap" type="jp.dcworks.app.paiza_learn_track_web.mybatis.entity.ProgressRatesMap">
 		<result property="teamUsersId" column="id" />
 		<result property="name" column="name" />
+		<result property="learningStartDate" column="learning_start_date" />
+		<result property="elapsedDays" column="elapsed_days" />
 		<result property="sumTotalLearningHours" column="sum_total_learning_hours" />
 	</resultMap>
 
@@ -13,17 +15,21 @@
 		SELECT
 			tu.id
 			, tu.name
+			, tu.learning_start_date
+			, DATEDIFF(now(), tu.learning_start_date) as elapsed_days
 			, ROUND((sum(pr.achieved_learning_hours) / #{sum_learning_minutes}) * 100, 1) as sum_total_learning_hours
 		FROM
 			progress_rates pr
 				LEFT JOIN team_users tu ON
 					tu.id = pr.team_users_id
 		WHERE
-			pr.report_date = #{report_date}
+			tu.delete_flg = 0
+			AND pr.report_date = #{report_date}
 		GROUP BY
 			pr.team_users_id
 		ORDER BY
-			pr.team_users_id
+			tu.learning_start_date
+			, pr.team_users_id
 		;
 	</select>
 </mapper>

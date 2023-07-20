@@ -1,5 +1,7 @@
 package jp.dcworks.app.paiza_learn_track_web.mybatis.entity;
 
+import java.util.Date;
+
 import lombok.Data;
 
 /**
@@ -15,6 +17,12 @@ public class ProgressRatesMap {
 
 	/** 名前 */
 	private String name;
+
+	/** 学習開始日 */
+	private Date learningStartDate;
+
+	/** 経過日数 */
+	private Integer elapsedDays;
 
 	/** 学習時間合計（時） */
 	private Double sumTotalLearningHours;
