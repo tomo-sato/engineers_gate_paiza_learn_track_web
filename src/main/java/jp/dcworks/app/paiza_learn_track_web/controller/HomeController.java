@@ -63,16 +63,22 @@ public class HomeController {
 	/**
 	 * [GET]講座別一覧画面のアクション。
 	 *
+	 * @param reportDate 集計日（yyyy-MM-dd）
 	 * @param model 画面にデータを送るためのオブジェクト
+	 * @return
 	 * @throws ParseException
 	 */
 	@GetMapping(path = {"", "/"})
 	public String index(@RequestParam(name = "reportDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date reportDate, Model model) throws ParseException {
 
+		// 学習時間（時）の合計を取得する。
 		Double sumLearningHours = tasksService.findGroupBySumLearningHours();
-		List<ProgressRatesMap> progressRatesList = progressRatesService.getSumTotalLearningHours(reportDate, sumLearningHours);
+		// 受講生の進捗率を取得。
+		List<ProgressRatesMap> progressRatesList = progressRatesService.getProgressRate(reportDate, sumLearningHours);
+		// 受講生の最終着手課題を取得する。
 		Map<Long, TeamUserTaskProgressMap> lastAccessLessonMap = teamUserTaskProgressService.getLastAccessLessonMap(reportDate);
 
+		// 画面表示用にデータ整形。
 		List<ProgressRatesDto> progressRatesDtoList = convertProgressRatesDto(progressRatesList, lastAccessLessonMap);
 
 		model.addAttribute("reportDate", reportDate);
@@ -83,7 +89,10 @@ public class HomeController {
 	/**
 	 * [GET]講座別進捗一覧画面のアクション。
 	 *
+	 * @param reportDate 集計日（yyyy-MM-dd）
+	 * @param teamUsersId ユーザーID
 	 * @param model 画面にデータを送るためのオブジェクト
+	 * @return
 	 * @throws ParseException
 	 */
 	@GetMapping("/detail/{teamUsersId}")
@@ -91,8 +100,10 @@ public class HomeController {
 
 		// tasks テーブルより レッスンでグルーピングした結果を表出するリストのベースとする。（ここで取得した結果が全課題。）
 		List<TasksMap> tasksMapList = tasksService.findGroupByLesson();
+		// ユーザーID、集計日で検索した結果を取得する。
 		Map<String, ProgressRates> progressRatesMap = progressRatesService.findByTeamUsersIdAndReportDateOrderMap(teamUsersId, reportDate);
 
+		// 全課題と、ユーザー情報を紐付ける。
 		List<UserProgressRatesDto> userProgressRatesDtoList = convertUserProgressRatesDto(tasksMapList, progressRatesMap);
 
 		model.addAttribute("reportDate", reportDate);
@@ -105,6 +116,17 @@ public class HomeController {
 		return "detail";
 	}
 
+	/**
+	 * [POST]講座別進捗一覧画面、オリジナル課題進捗率登録アクション。
+	 *
+	 * @param requestTaskProgressRate リクエストデータ
+	 * @param teamUsersId ユーザーID
+	 * @param maxTasksId 課題ID
+	 * @param result
+	 * @param redirectAttributes
+	 * @return
+	 * @throws ParseException
+	 */
 	@PostMapping("/registRate/{teamUsersId}/{maxTasksId}")
 	public String registRate(@Validated @ModelAttribute RequestTaskProgressRate requestTaskProgressRate,
 			@PathVariable Long teamUsersId,
@@ -206,14 +228,14 @@ public class HomeController {
 		for (ProgressRatesMap item : progressRatesList) {
 			Long teamUsersId = item.getTeamUsersId();
 
-			Double sumTotalLearningHours = item.getSumTotalLearningHours();
+			Double progressRate = item.getProgressRate();
 			Integer elapsedDays = item.getElapsedDays();
-			Integer predictedEndDuration = (int) (elapsedDays / (sumTotalLearningHours / 100)) - elapsedDays;
+			Integer predictedEndDuration = (int) (elapsedDays / (progressRate / 100)) - elapsedDays;
 
 			ProgressRatesDto progressRatesDto = new ProgressRatesDto();
 			progressRatesDto.setTeamUsersId(teamUsersId);
 			progressRatesDto.setName(item.getName());
-			progressRatesDto.setSumTotalLearningHours(sumTotalLearningHours);
+			progressRatesDto.setProgressRate(progressRate);
 			progressRatesDto.setLearningStartDate(item.getLearningStartDate());
 			progressRatesDto.setElapsedDays(elapsedDays);
 

@@ -45,7 +45,7 @@
 										<td>[[${progressRates.lessonName}]]<br>【[[${progressRates.chapterName}]]】</td>
 										<td th:text="|${#dates.format(progressRates.learningStartDate, 'yyyy-MM-dd')}（${progressRates.elapsedDays} 日）|">2023-07-05（10日）</td>
 										<td th:text="|${#dates.format(progressRates.predictedEndDate, 'yyyy-MM-dd')}（+${progressRates.predictedEndDuration} 日）|">2023-07-05（10日）</td>
-										<td><b th:text="|${progressRates.sumTotalLearningHours}%|">100.00%</b></td>
+										<td><b th:text="|${progressRates.progressRate}%|">100.00%</b></td>
 										<td th:text="${#dates.format(progressRates.chapterLastAccessDatetime, 'yyyy-MM-dd')}">2016-05-25</td>
 									</tr>
 								</tbody>

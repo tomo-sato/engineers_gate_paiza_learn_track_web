@@ -15,5 +15,13 @@ import jp.dcworks.app.paiza_learn_track_web.entity.OriginalTaskProgress;
  */
 public interface OriginalTaskProgressRepository extends PagingAndSortingRepository<OriginalTaskProgress, Long>, CrudRepository<OriginalTaskProgress, Long> {
 
+	/**
+	 * ユーザーID、チャプターID、集計日で絞り込み。
+	 *
+	 * @param teamUsersId ユーザーID
+	 * @param chapterId チャプターID
+	 * @param reportDate 集計日
+	 * @return
+	 */
 	Optional<OriginalTaskProgress> findByTeamUsersIdAndChapterIdAndReportDate(Long teamUsersId, Integer chapterId, Date reportDate);
 }

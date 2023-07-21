@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="jp.dcworks.app.paiza_learn_track_web.mybatis.TasksMapper">
 
-	<!-- tasks テーブルより task_types_id:1.paiza でグルーピングした学習時間（時）の合計を取得する。 -->
+	<!-- tasks テーブルより グルーピングした学習時間（時）の合計を取得する。 -->
 	<select id="findGroupBySumLearningHours" resultType="java.lang.Double">
 		SELECT
 			sum(learning_minutes) / 60

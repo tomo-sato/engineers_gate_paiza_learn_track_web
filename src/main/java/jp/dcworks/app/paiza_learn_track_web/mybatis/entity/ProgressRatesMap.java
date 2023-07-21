@@ -24,6 +24,6 @@ public class ProgressRatesMap {
 	/** 経過日数 */
 	private Integer elapsedDays;
 
-	/** 学習時間合計（時） */
-	private Double sumTotalLearningHours;
+	/** 学習進捗率 */
+	private Double progressRate;
 }

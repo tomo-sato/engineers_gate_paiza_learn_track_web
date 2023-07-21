@@ -23,10 +23,10 @@ public class OriginalTaskProgressService {
 	/**
 	 * オリジナル課題進捗管理を登録する。
 	 *
-	 * @param teamUsersId
-	 * @param chapterId
-	 * @param taskProgressRate
-	 * @param reportDate
+	 * @param teamUsersId ユーザーID
+	 * @param chapterId チャプターID
+	 * @param taskProgressRate 進捗率
+	 * @param reportDate 集計日
 	 * @return
 	 */
 	public OriginalTaskProgress save(Long teamUsersId, Integer chapterId, Double taskProgressRate, Date reportDate) {
