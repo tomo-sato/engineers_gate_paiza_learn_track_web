@@ -19,4 +19,8 @@ public class RequestTaskProgressRate implements Serializable  {
 	@NotBlank(message = "進捗率を入力してください。")
 	@Size(max = 5, message = "進捗率は最大5文字です。")
 	private String taskProgressRate;
+
+	/** 集計日（yyyy-MM-dd） */
+	@NotBlank(message = "パラメータ不正。")
+	private String reportDate;
 }

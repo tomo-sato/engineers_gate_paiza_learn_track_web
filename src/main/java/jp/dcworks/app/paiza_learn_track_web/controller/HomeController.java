@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jp.dcworks.app.paiza_learn_track_web.dto.ProgressRatesDto;
@@ -45,8 +47,6 @@ import lombok.extern.log4j.Log4j2;
 @RequestMapping("/")
 public class HomeController {
 
-	private static final String REPORT_DATE_STR = "2023-07-19";
-
 	/** 課題サービス */
 	@Autowired
 	TasksService tasksService;
@@ -67,10 +67,7 @@ public class HomeController {
 	 * @throws ParseException
 	 */
 	@GetMapping(path = {"", "/"})
-	public String index(Model model) throws ParseException {
-
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Date reportDate = sdf.parse(REPORT_DATE_STR);
+	public String index(@RequestParam(name = "reportDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date reportDate, Model model) throws ParseException {
 
 		Double sumLearningHours = tasksService.findGroupBySumLearningHours();
 		List<ProgressRatesMap> progressRatesList = progressRatesService.getSumTotalLearningHours(reportDate, sumLearningHours);
@@ -78,6 +75,7 @@ public class HomeController {
 
 		List<ProgressRatesDto> progressRatesDtoList = convertProgressRatesDto(progressRatesList, lastAccessLessonMap);
 
+		model.addAttribute("reportDate", reportDate);
 		model.addAttribute("progressRatesDtoList", progressRatesDtoList);
 		return "index";
 	}
@@ -89,10 +87,7 @@ public class HomeController {
 	 * @throws ParseException
 	 */
 	@GetMapping("/detail/{teamUsersId}")
-	public String detail(@PathVariable Long teamUsersId, Model model) throws ParseException {
-
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Date reportDate = sdf.parse(REPORT_DATE_STR);
+	public String detail(@RequestParam(name = "reportDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date reportDate, @PathVariable Long teamUsersId, Model model) throws ParseException {
 
 		// tasks テーブルより レッスンでグルーピングした結果を表出するリストのベースとする。（ここで取得した結果が全課題。）
 		List<TasksMap> tasksMapList = tasksService.findGroupByLesson();
@@ -100,6 +95,7 @@ public class HomeController {
 
 		List<UserProgressRatesDto> userProgressRatesDtoList = convertUserProgressRatesDto(tasksMapList, progressRatesMap);
 
+		model.addAttribute("reportDate", reportDate);
 		model.addAttribute("userProgressRatesDtoList", userProgressRatesDtoList);
 		model.addAttribute("teamUsersId", teamUsersId);
 
@@ -116,10 +112,10 @@ public class HomeController {
 			BindingResult result,
 			RedirectAttributes redirectAttributes) throws ParseException {
 
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Date reportDate = sdf.parse(REPORT_DATE_STR);
-
 		log.info("進捗率登録処理のアクションが呼ばれました。：requestTaskProgressRate={}", requestTaskProgressRate);
+
+		// 日付がないとそもそも機能しないので、チェック無しで取得して、だめなら落とす。
+		String strReportDate = requestTaskProgressRate.getReportDate();
 
 		// バリデーション。
 		if (result.hasErrors()) {
@@ -129,7 +125,7 @@ public class HomeController {
 			redirectAttributes.addFlashAttribute("requestTaskProgressRate", requestTaskProgressRate);
 
 			// 入力画面へリダイレクト。
-			return "redirect:/detail/" + teamUsersId;
+			return "redirect:/detail/" + teamUsersId + "?reportDate=" + strReportDate;
 		}
 
 		// 課題IDから、課題を抽出しチャプターIDを取得する。
@@ -145,6 +141,8 @@ public class HomeController {
 		Integer chapterId = tasks.getChapterId();
 		String strTaskProgressRate = requestTaskProgressRate.getTaskProgressRate();
 		Double taskProgressRate = NumberUtils.toDouble(strTaskProgressRate);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date reportDate = sdf.parse(strReportDate);
 
 		// オリジナル課題進捗管理テーブルにデータを登録する。
 		OriginalTaskProgress originalTaskProgress = originalTaskProgressService.save(teamUsersId, chapterId, taskProgressRate, reportDate);
@@ -153,7 +151,7 @@ public class HomeController {
 		// 課題進捗率テーブルにデータを登録する。
 		progressRatesService.save(tasks, originalTaskProgress, reportDate);
 
-		return "redirect:/detail/" + teamUsersId;
+		return "redirect:/detail/" + teamUsersId + "?reportDate=" + strReportDate;
 	}
 
 	/**
