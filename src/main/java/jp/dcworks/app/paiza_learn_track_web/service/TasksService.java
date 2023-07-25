@@ -5,10 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import jp.dcworks.app.paiza_learn_track_web.entity.Tasks;
+import jp.dcworks.app.paiza_learn_track_library.entity.Tasks;
+import jp.dcworks.app.paiza_learn_track_library.repository.TasksRepository;
 import jp.dcworks.app.paiza_learn_track_web.mybatis.TasksMapper;
 import jp.dcworks.app.paiza_learn_track_web.mybatis.entity.TasksMap;
-import jp.dcworks.app.paiza_learn_track_web.repository.TasksRepository;
 
 /**
  * 課題サービスクラス。

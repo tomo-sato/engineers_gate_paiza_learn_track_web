@@ -1,15 +1,14 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '2.7.13'
+	id 'org.springframework.boot' version '2.7.14'
 	id 'io.spring.dependency-management' version '1.1.0'
 }
 
-group = 'jp.dcworks.app.paiza_learn_track_web'
-version = '0.0.1-SNAPSHOT'
+apply plugin: 'eclipse'
 
-java {
-	sourceCompatibility = '17'
-}
+group = 'jp.dcworks.app.paiza_learn_track'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
 
 configurations {
 	compileOnly {
@@ -22,6 +21,9 @@ repositories {
 }
 
 dependencies {
+
+	implementation project(':engineers_gate_paiza_learn_track_library')
+
 	// spring-boot基本機能
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'

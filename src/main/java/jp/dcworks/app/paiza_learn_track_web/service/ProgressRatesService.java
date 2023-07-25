@@ -8,12 +8,12 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import jp.dcworks.app.paiza_learn_track_web.entity.OriginalTaskProgress;
-import jp.dcworks.app.paiza_learn_track_web.entity.ProgressRates;
-import jp.dcworks.app.paiza_learn_track_web.entity.Tasks;
+import jp.dcworks.app.paiza_learn_track_library.entity.OriginalTaskProgress;
+import jp.dcworks.app.paiza_learn_track_library.entity.ProgressRates;
+import jp.dcworks.app.paiza_learn_track_library.entity.Tasks;
+import jp.dcworks.app.paiza_learn_track_library.repository.ProgressRatesRepository;
 import jp.dcworks.app.paiza_learn_track_web.mybatis.ProgressRatesMapper;
 import jp.dcworks.app.paiza_learn_track_web.mybatis.entity.ProgressRatesMap;
-import jp.dcworks.app.paiza_learn_track_web.repository.ProgressRatesRepository;
 
 /**
  * 課題進捗率サービスクラス。

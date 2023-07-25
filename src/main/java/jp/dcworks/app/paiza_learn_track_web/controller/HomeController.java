@@ -22,12 +22,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import jp.dcworks.app.paiza_learn_track_library.entity.OriginalTaskProgress;
+import jp.dcworks.app.paiza_learn_track_library.entity.ProgressRates;
+import jp.dcworks.app.paiza_learn_track_library.entity.Tasks;
 import jp.dcworks.app.paiza_learn_track_web.dto.ProgressRatesDto;
 import jp.dcworks.app.paiza_learn_track_web.dto.RequestTaskProgressRate;
 import jp.dcworks.app.paiza_learn_track_web.dto.UserProgressRatesDto;
-import jp.dcworks.app.paiza_learn_track_web.entity.OriginalTaskProgress;
-import jp.dcworks.app.paiza_learn_track_web.entity.ProgressRates;
-import jp.dcworks.app.paiza_learn_track_web.entity.Tasks;
 import jp.dcworks.app.paiza_learn_track_web.mybatis.entity.ProgressRatesMap;
 import jp.dcworks.app.paiza_learn_track_web.mybatis.entity.TasksMap;
 import jp.dcworks.app.paiza_learn_track_web.mybatis.entity.TeamUserTaskProgressMap;

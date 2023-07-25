@@ -5,8 +5,8 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import jp.dcworks.app.paiza_learn_track_web.entity.OriginalTaskProgress;
-import jp.dcworks.app.paiza_learn_track_web.repository.OriginalTaskProgressRepository;
+import jp.dcworks.app.paiza_learn_track_library.entity.OriginalTaskProgress;
+import jp.dcworks.app.paiza_learn_track_library.repository.OriginalTaskProgressRepository;
 
 /**
  * オリジナル課題進捗管理サービスクラス。
